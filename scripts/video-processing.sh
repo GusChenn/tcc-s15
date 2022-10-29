@@ -26,7 +26,7 @@ for dir in inputs/*/; do
       end_time="-t ${BASH_REMATCH[9]}"
     fi
     # png, jpg, bmp
-    output_name="./outputs/${output_prefix}${BASH_REMATCH[3]}/${BASH_REMATCH[3]}%06d.bmp"
+    output_name="./outputs/${output_prefix}${BASH_REMATCH[3]}/%06d.jpg"
   fi
   command="ffmpeg ${init_time} ${set} ${end_time} ${output_name}"
   eval "$command"
