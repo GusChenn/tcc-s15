@@ -1,51 +1,85 @@
 import cv2
+import datetime
 
-# Ctes
-CAM_PORT = 0
-cam = cv2.VideoCapture(CAM_PORT, cv2.CAP_DSHOW)
-base_file_name = "video_"
+"""
+Funcoes auxiliares
+"""
+def getOutputName (prefix, id):
+    return str(prefix) + base_file_name + str(id) + video_file_format
 
-# Define os parametros de gravacao do video
-fourcc = cv2.VideoWriter_fourcc('M','J','P','G')
-video_file_format = ".avi"
+def getOutputTextFormat ():
+    return "| Fazendo gravacao: " + str(final_time - currentTime()) + " |"
 
-# ----------------------------------------------
-# ALTERAR AQ
-recording_time_in_seconds = 2 
-# ----------------------------------------------
+def currentTime ():
+    return datetime.datetime.now()
 
-recording_quantity = 1
-
-def defineFileName (index):
-    return base_file_name + str(index) + video_file_format
-
-# 1000 loops = mais ou menos 30s
-def recordingTimeInLoops (seconds):
-    loops = seconds * 33
-    return loops
-
-recording_time = recordingTimeInLoops(recording_time_in_seconds)
-recording_time_fraction = recording_time / 3
-
-# Comeca a puxar os frames
-for i in range (recording_quantity):
-    videoFileName = defineFileName(i)
-    videoWriter = cv2.VideoWriter(videoFileName, fourcc, 30.0, (1920,1080))
-    cam.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-    cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
-    cam.set(cv2.CAP_PROP_FPS, 30)
-    print("Iniciando gravacao " + str(i))
-    for j in range (recording_time):
+def getFrame (next_record_time):
+    while (currentTime() <= next_record_time + record_duration):
         ret, frame = cam.read()
         if (ret):
             videoWriter.write(frame)
-            if (j < 1 * recording_time_fraction):
-                print("gravando.  resolucao: " + str(frame.shape[0]) + " x " + str(frame.shape[1]), end="\r")
-            elif (j > 1 * recording_time_fraction and j < 2 * recording_time_fraction):
-                print("gravando.. resolucao: " + str(frame.shape[0]) + " x " + str(frame.shape[1]), end="\r")
-            elif (j > 2 * recording_time_fraction and j < 3 * recording_time_fraction):
-                print("gravando... resolucao: " + str(frame.shape[0]) + " x " + str(frame.shape[1]), end="\r")
-    videoWriter.release()
+            print(getOutputTextFormat(), end="\r")
+    return currentTime()
+
+"""
+------------------------------------------------------------------------------
+Declaracao de variaveis
+------------------------------------------------------------------------------
+"""
+base_file_name = "_record_"
+video_file_format = ".mp4"
+time_between_records = 20
+record_duration = 5
+CAM_PORT = 1
+recording_count = 0
+# CAM_PORT = 0 # descomentar quando estiver usando uma webcam conectada por usb
+# cam = cv2.VideoCapture(CAM_PORT, cv2.CAP_DSHOW) # descomentar quando estiver usando uma webcam conectada por usb
+
+# constantes camera
+fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+cam = cv2.VideoCapture(CAM_PORT)
+width = cam.get(cv2.CAP_PROP_FRAME_WIDTH)
+height = cam.get(cv2.CAP_PROP_FRAME_HEIGHT)
+fps = 30.0
+
+# constantes tempo
+initial_time = currentTime()
+total_duration = datetime.timedelta(minutes=1)
+final_time = initial_time + total_duration
+
+time_between_records = datetime.timedelta(seconds=time_between_records)
+record_duration = datetime.timedelta(seconds=record_duration)
+
+last_record = initial_time
+
+"""
+-----------------------------------------------------------------------------
+Configura gravação
+-----------------------------------------------------------------------------
+"""
+cam.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+cam.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+cam.set(cv2.CAP_PROP_FPS, fps)
+
+
+"""
+-----------------------------------------------------------------------------
+Inicio do programa
+-----------------------------------------------------------------------------
+"""
+print("Iniciando gravacao")
+
+next_record_time = initial_time
+
+while (currentTime() < final_time):
+    if (currentTime() >= next_record_time):
+        videoFileName = getOutputName(recording_count, currentTime())
+        videoWriter = cv2.VideoWriter(videoFileName, fourcc, fps, (int(width), int(height)))
+        finished_record_time = getFrame(next_record_time)
+        next_record_time = finished_record_time + time_between_records
+        recording_count += 1
+
+# Finaliza gravacao            
+videoWriter.release()
 cam.release()
 cv2.destroyAllWindows()
-
