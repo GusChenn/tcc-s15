@@ -1,14 +1,19 @@
 import cv2
 import datetime
+from threading import Thread
+from queue import Queue
 
 """
 Funcoes auxiliares
 """
 def getOutputName (prefix, id):
-    return str(prefix) + base_file_name + str(id) + video_file_format
+    return '.\\output\\' + str(prefix) + base_file_name + str(id) + video_file_format
 
-def getOutputTextFormat ():
+def getOutputTextFormatRecording ():
     return "| Fazendo gravacao: " + str(final_time - currentTime()) + " |"
+
+def getOutputTextFormatWaiting (counter):
+    return "| Aguardando proxima gravacao: " + str(final_time - currentTime()) + " | gravacoes feitas: " + str(counter)
 
 def currentTime ():
     return datetime.datetime.now()
@@ -17,8 +22,8 @@ def getFrame (next_record_time):
     while (currentTime() <= next_record_time + record_duration):
         ret, frame = cam.read()
         if (ret):
+            print(getOutputTextFormatRecording(), end="\r")
             videoWriter.write(frame)
-            print(getOutputTextFormat(), end="\r")
     return currentTime()
 
 """
@@ -26,28 +31,36 @@ def getFrame (next_record_time):
 Declaracao de variaveis
 ------------------------------------------------------------------------------
 """
+
+
+
+#####################################
+# VARIAVEIS QUE TALVEZ PRECISEM SER MUDADAS AQUI
+
+CAM_PORT = 0 # tente os valores 1, 2, 3... e rode o script dnv
+
+#####################################
+
+
+
 base_file_name = "_record_"
 video_file_format = ".mp4"
-time_between_records = 20
-record_duration = 5
-CAM_PORT = 1
+time_between_records = 10
+record_duration = 15
 recording_count = 0
-# CAM_PORT = 0 # descomentar quando estiver usando uma webcam conectada por usb
-# cam = cv2.VideoCapture(CAM_PORT, cv2.CAP_DSHOW) # descomentar quando estiver usando uma webcam conectada por usb
 
-# constantes camera
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-cam = cv2.VideoCapture(CAM_PORT)
+cam = cv2.VideoCapture(CAM_PORT, cv2.CAP_DSHOW)
 width = cam.get(cv2.CAP_PROP_FRAME_WIDTH)
 height = cam.get(cv2.CAP_PROP_FRAME_HEIGHT)
 fps = 30.0
 
 # constantes tempo
 initial_time = currentTime()
-total_duration = datetime.timedelta(minutes=1)
+total_duration = datetime.timedelta(days=2)
 final_time = initial_time + total_duration
 
-time_between_records = datetime.timedelta(seconds=time_between_records)
+time_between_records = datetime.timedelta(minutes=time_between_records)
 record_duration = datetime.timedelta(seconds=record_duration)
 
 last_record = initial_time
@@ -73,11 +86,12 @@ next_record_time = initial_time
 
 while (currentTime() < final_time):
     if (currentTime() >= next_record_time):
-        videoFileName = getOutputName(recording_count, currentTime())
+        videoFileName = getOutputName(recording_count, currentTime().strftime('%Hh-%Mm'))
         videoWriter = cv2.VideoWriter(videoFileName, fourcc, fps, (int(width), int(height)))
         finished_record_time = getFrame(next_record_time)
         next_record_time = finished_record_time + time_between_records
         recording_count += 1
+    print(getOutputTextFormatWaiting(recording_count), end='\r')
 
 # Finaliza gravacao            
 videoWriter.release()
