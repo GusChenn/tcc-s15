@@ -46,13 +46,15 @@ CAM_PORT = 0 # tente os valores 1, 2, 3... e rode o script dnv
 base_file_name = "_record_"
 video_file_format = ".mp4"
 time_between_records = 10
-record_duration = 15
+record_duration = 30
 recording_count = 0
 
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')
 cam = cv2.VideoCapture(CAM_PORT, cv2.CAP_DSHOW)
-width = cam.get(cv2.CAP_PROP_FRAME_WIDTH)
-height = cam.get(cv2.CAP_PROP_FRAME_HEIGHT)
+# width = cam.get(cv2.CAP_PROP_FRAME_WIDTH)
+# height = cam.get(cv2.CAP_PROP_FRAME_HEIGHT)
+width = 1920
+height = 1080
 fps = 30.0
 
 # constantes tempo
