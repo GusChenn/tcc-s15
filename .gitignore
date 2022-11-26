@@ -1,4 +1,3 @@
-video_*
 *.mp4
 scripts/image_extraction/inputs/*/
 scripts/image_extraction/outputs/*/
