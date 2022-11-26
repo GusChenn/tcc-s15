@@ -1,3 +1,5 @@
+video_*
+*.mp4
 scripts/inputs/*/
 scripts/outputs/*/
 neural_network/Massas/
