@@ -14,7 +14,7 @@ def formatOutputFileName (filename, format, prefix):
     return output_filename + format
 
 
-mask = Image.open("./tcc-mask.png").convert('L')
+mask = Image.open("./mask.png").convert('L')
 mask_array = np.array(mask)
 
 for filename in os.listdir(base_directory):
