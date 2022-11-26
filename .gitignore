@@ -1,4 +1,5 @@
 *.mp4
-scripts/image_extraction/inputs/*/
-scripts/image_extraction/outputs/*/
+scripts/image_extraction/inputs/*
+scripts/image_extraction/outputs/*
+scripts/video_acquisition/outputs/*
 scripts/neural_network/Massas/
