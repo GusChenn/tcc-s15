@@ -2,4 +2,6 @@
 scripts/image_extraction/inputs/*
 scripts/image_extraction/outputs/*
 scripts/video_acquisition/outputs/*
-scripts/neural_network/images/*/*
+scripts/neural_network/images/raw/*
+scripts/neural_network/images/ready_to_predict/*
+scripts/neural_network/images/Massas/*/*
