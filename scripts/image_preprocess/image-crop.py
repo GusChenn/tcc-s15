@@ -3,7 +3,7 @@ import numpy as np
 from PIL import Image
 
 base_directory = "../image_extraction/outputs/"
-output_directory = "../neural_network/Massas/raw/"
+output_directory = "../neural_network/images/raw/"
 output_prefix = "prcsd_"
 output_format = ".png"
 
