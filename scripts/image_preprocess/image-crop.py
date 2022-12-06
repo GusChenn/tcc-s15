@@ -1,6 +1,7 @@
 import os
 import numpy as np
 from PIL import Image
+import cv2
 
 base_directory = "../image_extraction/outputs/"
 output_directory = "../neural_network/images/raw/"
@@ -14,7 +15,7 @@ def formatOutputFileName (filename):
     return output_filename + output_format
 
 
-mask = Image.open("./mask.png").convert('L')
+mask = Image.open("./mask.png").convert('RGB')
 mask_array = np.array(mask)
 
 for filename in os.listdir(base_directory):
@@ -25,7 +26,7 @@ for filename in os.listdir(base_directory):
         original_image = Image.open(f).convert('RGB')
         original_image_array = np.array(original_image)
 
-        cropped_image_array = np.dstack((original_image_array,mask_array))
+        cropped_image_array = cv2.add(original_image_array, mask_array)
         cropped_image = Image.fromarray(cropped_image_array)
 
         output_filename = formatOutputFileName(filename)
