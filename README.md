@@ -49,10 +49,10 @@ Concluiu-se que deveriam ser inicialmente utilizados frames de vídeos retirados
 
 Foi desenvolvida a rede neural no modelo Xception através da biblioteca Keras e fez-se um treinamento, que indicou que a rede atribui pesos grandes a detalhes não muito relevantes das imagens. Para solucionar o problema, foi desenvolvido um programa de aplicação de máscaras. Refeito o treino, foram encontrados resultados satisfatórios.
 
-Por fim, foram desenvolvidas as rotinas de treinamento e de supervisão, que juntam todos os códigos já desenvolvidos para criar dois fluxos completos do software.
+Por fim, foram desenvolvidas as rotinas de treinamento e de supervisão, que juntam todos os códigos já desenvolvidos para criar dois fluxos completos do software. Na figura 2, podemos observar o resultado de cada uma das camadas do modelo quando avaliando uma massa não pronta (bloco superior) e uma massa pronta (bloco inferior).
 
-<img src="./resources/images/visualizacao_modelo_npronto.png" width="49%">
-<img src="./resources/images/visualizacao_modelo.png" width="49%">
+![visualização n pronto](./resources/images/visualizacao_modelo_npronto.png "visualização n pronto")
+![visualização pronto](./resources/images/visualizacao_modelo.png "visualização pronto")
 
 *Figura 2: Visualização do resultado do modelo*
 
@@ -62,8 +62,14 @@ O software é capaz de extrai aproximadamente 275 gravações curtas da massa de
 
 A classificação das massas entre "prontas" e "não prontas" se dá de forma manual. Para realizar uma classificação precisa, é necessário identificar a marca de tempo em que a massa da gravação alcançou o fim do refino. Esse parâmetro deve ser adquirido através da medição das partículas que compõe a massa. O projeto dispõe de um equipamento capaz de realizar tal medição.
 
-O modelo apresentou métricas satisfatórias com o banco de imagens utilizado (1696 amostras). A quantidade ideal de épocas para o treinamento é 23, alcançando uma precisão de 99.41%. Treinamentos com mais épocas geram um *overfitting* crescente, prejudicando a precisão do modelo.
+O modelo apresentou métricas satisfatórias com o banco de imagens utilizado (1696 amostras). A quantidade ideal de épocas para o treinamento é 24, alcançando uma precisão de 99.41%. Treinamentos com mais épocas geram um *overfitting* crescente, prejudicando a precisão do modelo.
 
 A matriz de confusão aponta uma baixa ocorrência de erros do tipo I e II. Por se tratarem de erros críticos, medidas mitigadoras foram tomadas.
 
 Em suma, os objetivos foram devidamente cumpridos, salvo a integração do sistema com os equipamentos do projeto Amazônia 4.0.
+
+![gráfico overfitting](./resources/images/overfit.png "gráfico overfitting")
+*Figura 3: Plot métricas x épocas*
+
+![matriz confusão](./resources/images/matriz_de_confusao.png "matriz confusão")
+*Figura 4: Matriz de confusão*
