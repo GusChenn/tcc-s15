@@ -5,9 +5,10 @@ import os
 image_size = (180, 180)
 prediction_images_dir = "./images/ready_to_predict/"
 images = []
-batch_size = 8
+batch_size = 10
+limiar_de_decisa = 0.5
 
-# Load all images from prediction directory in a list
+# Carrega todas as imagens a serem analisadas em uma lista
 print("Gerando vetor de imagens a serem analisadas...")
 for filename in os.listdir(prediction_images_dir):
   f = os.path.join(prediction_images_dir, filename)
@@ -18,30 +19,30 @@ for filename in os.listdir(prediction_images_dir):
     images.append(img)
 
 
-# Load model
+# Carrega modelo
 print("Carregando modelo...")
-loaded_model = keras.models.load_model("trained_model")
+loaded_model = keras.models.load_model("modelo_treinado")
 loaded_model.compile(loss='binary_crossentropy',
               optimizer='rmsprop',
               metrics=['accuracy'])
 
-# Stack images
+# Empilha imagens
 print("Manipulando imagens...")
 images = np.vstack(images)
 
-# Make prediction
+# Gera predições
 print("Fazendo previsão...")
 predictions = loaded_model.predict(images, batch_size=batch_size)
 
 # pronto = 1; n pronto = 0
-predictions = np.where(predictions > 0.5, 1, 0)
+predictions = np.where(predictions > limiar_de_decisa, 1, 0)
 
 positive = np.count_nonzero(predictions == 1)
 negative = np.count_nonzero(predictions == 0)
+
+print("Resultado predicao: {} imagens prontas, {} imagens nao prontas".format(positive, negative))
 
 if positive > negative:
   print("esta pronto")
 else:
   print("n esta pronto")
-# score = predictions[0]
-# print(f"This image is {100 * (1 - score):.2f}% cat and {100 * score:.2f}% dog.")
