@@ -19,7 +19,7 @@ for filename in os.listdir(base_directory):
         print('Aplicado mascara em: ' + f)
 
         original_image = Image.open(f).convert('RGB')
-        mask = Image.open("./tcc-mask.png").convert('L')
+        mask = Image.open("./masks/tcc-mask.png").convert('L')
 
         original_image_array = np.array(original_image)
         mask_array = np.array(mask)
